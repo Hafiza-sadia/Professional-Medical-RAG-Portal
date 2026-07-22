@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — MediQ Portal</title>
+  <meta name="description" content="About the MediQ Professional Medical RAG Portal." />
+  <link rel="stylesheet" href="/static/css/global.css" />
+  <style>
+    .about-hero {
+      text-align: center;
+      padding: 4rem 0 3rem;
+    }
+    .about-hero h1 { font-size: clamp(2rem,4vw,3rem); margin-bottom: 1rem; }
+    .about-hero p { color: var(--text-secondary); max-width: 600px; margin: 0 auto 2rem; line-height: 1.8; font-size: 1.05rem; }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin: 3rem 0;
+    }
+
+    .tech-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .tech-card:hover {
+      border-color: rgba(14,165,233,0.25);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-glow);
+    }
+    .tech-card .tech-logo { font-size: 2.5rem; margin-bottom: 1rem; }
+    .tech-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+    .tech-card p { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.65; }
+
+    .arch-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      margin: 3rem 0;
+    }
+
+    .arch-steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+      position: relative;
+      margin-top: 2rem;
+    }
+
+    .arch-step {
+      text-align: center;
+      position: relative;
+    }
+
+    .arch-step::after {
+      content: '→';
+      position: absolute;
+      right: -12px;
+      top: 20px;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+    }
+    .arch-step:last-child::after { display: none; }
+
+    .arch-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin: 0 auto 0.75rem;
+    }
+
+    .arch-step h4 { font-size: 0.82rem; margin-bottom: 0.3rem; font-weight: 700; }
+    .arch-step p { font-size: 0.72rem; color: var(--text-muted); }
+
+    .disclaimer-box {
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      margin: 2rem 0;
+    }
+
+    @media (max-width: 900px) {
+      .tech-grid { grid-template-columns: repeat(2, 1fr); }
+      .arch-steps { grid-template-columns: 1fr; gap: 1rem; }
+      .arch-step::after { display: none; }
+    }
+    @media (max-width: 600px) {
+      .tech-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">🏥</div>
+      Medi<span>Q</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/chat">AI Chat</a></li>
+      <li><a href="/upload">Upload Docs</a></li>
+      <li><a href="/about" class="active">About</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="/chat" class="btn btn-primary btn-sm">Start Chatting →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-content">
+<div class="page-container">
+
+  <!-- Hero -->
+  <div class="about-hero">
+    <div class="section-label">🏥 About MediQ</div>
+    <h1>Professional <span class="grad-text">Medical RAG</span> Portal</h1>
+    <p>
+      MediQ is an enterprise-grade AI system combining Retrieval-Augmented Generation, FAISS vector search, and Groq Llama 3 to deliver evidence-grounded clinical answers from your own uploaded medical documents.
+    </p>
+    <div class="flex items-center gap-2" style="justify-content:center;flex-wrap:wrap">
+      <span class="badge badge-primary">⚡ FastAPI Backend</span>
+      <span class="badge badge-success">🧠 FAISS Vector DB</span>
+      <span class="badge badge-primary">🤖 Groq Llama 3</span>
+      <span class="badge badge-success">📄 LangChain RAG</span>
+      <span class="badge badge-primary">🔒 Local Storage</span>
+    </div>
+  </div>
+
+  <!-- Technology Stack -->
+  <div class="section-label mt-3">🔧 Technology Stack</div>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-logo">⚡</div>
+      <h3>FastAPI + Uvicorn</h3>
+      <p>High-performance async Python REST API serving both the frontend HTML pages and all JSON endpoints for upload, query, and vectorstore management.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-logo">🧠</div>
+      <h3>FAISS Vector DB</h3>
+      <p>Facebook AI Similarity Search (FAISS) provides millisecond-speed approximate nearest-neighbor retrieval over millions of document embeddings locally.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-logo">🔤</div>
+      <h3>Sentence Transformers</h3>
+      <p><em>all-MiniLM-L6-v2</em> generates dense 384-dimensional semantic embeddings for document chunks, enabling context-aware retrieval far beyond keyword search.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-logo">🤖</div>
+      <h3>Groq Llama 3</h3>
+      <p>Llama 3 synthesizes retrieved context into clinical-grade answers using structured prompt engineering with citation grounding, served at ultra-low latency.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-logo">🔗</div>
+      <h3>LangChain Framework</h3>
+      <p>Orchestrates the RAG pipeline: document loading, text splitting, embedding, vector storage, context retrieval, and LLM chaining with prompt templates.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-logo">📄</div>
+      <h3>PyPDF2 Extraction</h3>
+      <p>Robust multi-page PDF text extraction with UTF-8 normalization for handling complex medical documents, research papers, and clinical guidelines.</p>
+    </div>
+  </div>
+
+  <!-- Architecture -->
+  <div class="arch-section">
+    <div class="section-label">🏗️ Architecture</div>
+    <h2 style="font-size:1.4rem;margin-bottom:0.5rem">RAG Pipeline</h2>
+    <p class="text-secondary text-sm">End-to-end flow from PDF document to AI-generated clinical answer</p>
+
+    <div class="arch-steps">
+      <div class="arch-step">
+        <div class="arch-icon" style="background:rgba(14,165,233,0.12);color:var(--primary)">📄</div>
+        <h4>PDF Upload</h4>
+        <p>User uploads medical PDF via drag-and-drop</p>
+      </div>
+      <div class="arch-step">
+        <div class="arch-icon" style="background:rgba(99,102,241,0.12);color:var(--secondary)">✂️</div>
+        <h4>Text Chunking</h4>
+        <p>1000-char chunks with 200-char overlap</p>
+      </div>
+      <div class="arch-step">
+        <div class="arch-icon" style="background:rgba(16,185,129,0.12);color:var(--accent)">🔢</div>
+        <h4>Embedding</h4>
+        <p>384-dim vectors via sentence-transformers</p>
+      </div>
+      <div class="arch-step">
+        <div class="arch-icon" style="background:rgba(245,158,11,0.12);color:var(--warning)">🗄️</div>
+        <h4>FAISS Index</h4>
+        <p>Vectors persisted locally for fast retrieval</p>
+      </div>
+      <div class="arch-step">
+        <div class="arch-icon" style="background:rgba(14,165,233,0.12);color:var(--primary)">🤖</div>
+        <h4>Groq LLM Answer</h4>
+        <p>Top-k chunks + query → clinical response</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Docs -->
+  <div class="card mt-3" style="background:rgba(99,102,241,0.04);border-color:rgba(99,102,241,0.15)">
+    <div class="flex items-center justify-between mb-2">
+      <div>
+        <h3 style="font-size:1rem;margin-bottom:0.25rem">🔌 REST API</h3>
+        <p class="text-sm text-muted">FastAPI auto-generated interactive documentation</p>
+      </div>
+      <div class="flex gap-1">
+        <a href="/docs" target="_blank" class="btn btn-primary btn-sm">Swagger UI</a>
+        <a href="/redoc" target="_blank" class="btn btn-outline btn-sm">ReDoc</a>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem">
+      <div style="background:var(--bg-input);padding:0.75rem 1rem;border-radius:var(--radius-sm);font-size:0.8rem">
+        <span style="color:var(--accent);font-weight:700">GET</span>
+        <code style="margin-left:0.5rem;color:var(--text-secondary)">/api/health</code>
+        <div style="color:var(--text-muted);font-size:0.72rem;margin-top:0.2rem">Server + KB health check</div>
+      </div>
+      <div style="background:var(--bg-input);padding:0.75rem 1rem;border-radius:var(--radius-sm);font-size:0.8rem">
+        <span style="color:var(--primary);font-weight:700">POST</span>
+        <code style="margin-left:0.5rem;color:var(--text-secondary)">/api/upload</code>
+        <div style="color:var(--text-muted);font-size:0.72rem;margin-top:0.2rem">Upload & index a PDF document</div>
+      </div>
+      <div style="background:var(--bg-input);padding:0.75rem 1rem;border-radius:var(--radius-sm);font-size:0.8rem">
+        <span style="color:var(--primary);font-weight:700">POST</span>
+        <code style="margin-left:0.5rem;color:var(--text-secondary)">/api/query</code>
+        <div style="color:var(--text-muted);font-size:0.72rem;margin-top:0.2rem">Submit medical question to RAG engine</div>
+      </div>
+      <div style="background:var(--bg-input);padding:0.75rem 1rem;border-radius:var(--radius-sm);font-size:0.8rem">
+        <span style="color:var(--danger);font-weight:700">DELETE</span>
+        <code style="margin-left:0.5rem;color:var(--text-secondary)">/api/vectorstore/reset</code>
+        <div style="color:var(--text-muted);font-size:0.72rem;margin-top:0.2rem">Clear vector index and documents</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer-box mt-3">
+    <h3 style="font-size:0.95rem;margin-bottom:0.5rem">⚠️ Medical Disclaimer</h3>
+    <p class="text-sm" style="color:var(--text-secondary);line-height:1.75">
+      MediQ AI is designed for <strong>research, educational, and informational purposes only</strong>.
+      AI-generated answers are derived from uploaded documents and should <strong>not</strong> replace professional medical judgment.
+      Always consult a licensed healthcare professional for clinical decisions.
+      The system makes no guarantees about diagnostic or treatment accuracy.
+    </p>
+  </div>
+
+  <!-- Footer CTA -->
+  <div class="cta-actions mt-4 mb-4">
+    <a href="/upload" class="btn btn-primary btn-lg">📤 Build Your Knowledge Base</a>
+    <a href="/chat" class="btn btn-outline btn-lg">💬 Start AI Consultation</a>
+  </div>
+
+</div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2rem 0;text-align:center">
+  <div class="page-container">
+    <p style="color:var(--text-muted);font-size:0.82rem">
+      <strong style="color:var(--primary)">MediQ AI Portal</strong> — Professional Medical RAG System •
+      Built with FastAPI, LangChain, FAISS &amp; Groq Llama 3
+    </p>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="/static/js/utils.js"></script>
+</body>
+</html>

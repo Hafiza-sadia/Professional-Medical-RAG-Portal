@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Medical Chat — MediQ Portal</title>
+  <meta name="description" content="Chat with the AI medical assistant powered by your uploaded documents." />
+  <link rel="stylesheet" href="/static/css/global.css" />
+  <link rel="stylesheet" href="/static/css/chat.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">🏥</div>
+      Medi<span>Q</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/chat" class="active">AI Chat</a></li>
+      <li><a href="/upload">Upload Docs</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="/upload" class="btn btn-outline btn-sm">Upload PDF</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Chat Layout -->
+<div class="chat-layout">
+
+  <!-- ─── Sidebar ─────────────────────────────── -->
+  <aside class="chat-sidebar">
+
+    <!-- KB Status -->
+    <div>
+      <div class="sidebar-section-title">Knowledge Base</div>
+      <div class="kb-status-card">
+        <div class="kb-indicator">
+          <div class="kb-dot loading" id="kb-dot"></div>
+          <span class="kb-status-text text-sm" id="kb-status-text">Checking...</span>
+        </div>
+        <p class="text-sm text-muted" id="kb-docs-text">—</p>
+        <div class="mt-2">
+          <a href="/upload" class="btn btn-outline btn-sm btn-full">+ Add Documents</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Model Settings -->
+    <div>
+      <div class="sidebar-section-title">AI Settings</div>
+      <div class="flex flex-col gap-2">
+
+        <div class="input-group model-selector">
+          <label class="input-label">Groq Llama-3 Model</label>
+          <select id="model-select">
+            <option value="llama-3.3-70b-versatile" selected>llama-3.3-70b-versatile ⚡ (Fast & Free)</option>
+            <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
+            <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <div class="slider-row">
+            <label class="input-label">Temperature</label>
+            <span id="temp-val">0.2</span>
+          </div>
+          <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.2"
+            oninput="document.getElementById('temp-val').textContent = this.value" />
+        </div>
+
+        <div class="input-group">
+          <div class="slider-row">
+            <label class="input-label">Top-K Sources</label>
+            <span id="topk-val">3</span>
+          </div>
+          <input type="range" id="top-k" min="1" max="8" step="1" value="3"
+            oninput="document.getElementById('topk-val').textContent = this.value" />
+        </div>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div style="flex:1">
+      <div class="sidebar-section-title">Session History</div>
+      <div class="chat-history-list" id="history-list">
+        <div class="text-sm text-muted">No messages yet.</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col gap-1">
+      <button class="btn btn-ghost btn-sm btn-full" onclick="clearChat()">🗑️ Clear Chat</button>
+      <button class="btn btn-danger btn-sm btn-full" id="reset-kb-btn" onclick="resetKB()">⚠️ Reset Knowledge Base</button>
+    </div>
+  </aside>
+
+  <!-- ─── Main Chat ──────────────────────────── -->
+  <main class="chat-main">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <h2>🏥 MediQ Clinical Assistant</h2>
+        <p>Ask any medical question based on your uploaded documents</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="header-kb-badge" class="badge badge-warning">⚠️ KB Not Ready</div>
+        <span class="text-muted text-sm" id="msg-counter">0 messages</span>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="chat-messages" id="chat-messages">
+
+      <!-- Welcome State -->
+      <div class="chat-welcome" id="welcome-screen">
+        <div class="welcome-icon">🏥</div>
+        <h2>Clinical AI Ready</h2>
+        <p>Ask any medical question grounded in your uploaded PDF knowledge base. Clinical summaries, diagnostics, treatment protocols and more.</p>
+        <div class="suggestion-chips">
+          <div class="chip" onclick="useChip(this)">What is Type 2 Diabetes?</div>
+          <div class="chip" onclick="useChip(this)">Diagnostic criteria for hypertension?</div>
+          <div class="chip" onclick="useChip(this)">Treatment for prediabetes?</div>
+          <div class="chip" onclick="useChip(this)">What is HbA1c?</div>
+          <div class="chip" onclick="useChip(this)">Metformin side effects?</div>
+          <div class="chip" onclick="useChip(this)">Insulin therapy guidelines?</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Input Bar -->
+    <div class="chat-input-bar">
+      <div class="input-wrapper">
+        <textarea
+          id="chat-input"
+          placeholder="Ask a clinical question... (Enter to send, Shift+Enter for new line)"
+          rows="1"
+          oninput="autoResize(this)"
+          onkeydown="handleKey(event)"
+        ></textarea>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Send message">
+          ➤
+        </button>
+      </div>
+      <div class="input-footer">
+        <span class="input-hint">⚠️ Not a substitute for professional medical advice. Always consult a physician.</span>
+        <span class="input-hint" id="char-count">0 / 1000</span>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="/static/js/utils.js"></script>
+<script>
+  // ─── State ───────────────────────────────────────
+  let messages = [];
+  let isLoading = false;
+
+  // ─── Init ─────────────────────────────────────────
+  document.addEventListener("DOMContentLoaded", async () => {
+    await checkKBStatus();
+    document.getElementById("chat-input").addEventListener("input", updateCharCount);
+  });
+
+  async function checkKBStatus() {
+    try {
+      const data = await apiFetch("/api/vectorstore/status");
+      const dot = document.getElementById("kb-dot");
+      const text = document.getElementById("kb-status-text");
+      const docsText = document.getElementById("kb-docs-text");
+      const badge = document.getElementById("header-kb-badge");
+
+      if (data.ready) {
+        dot.className = "kb-dot ready";
+        text.textContent = "Knowledge base active";
+        docsText.textContent = `${data.document_count} document(s) loaded`;
+        badge.className = "badge badge-success";
+        badge.textContent = "✅ KB Ready";
+      } else {
+        dot.className = "kb-dot empty";
+        text.textContent = "No knowledge base";
+        docsText.textContent = "Upload PDFs to get started";
+        badge.className = "badge badge-warning";
+        badge.textContent = "⚠️ KB Not Ready";
+      }
+    } catch (_) {}
+  }
+
+  // ─── Chip suggestion ──────────────────────────────
+  function useChip(el) {
+    document.getElementById("chat-input").value = el.textContent;
+    updateCharCount();
+    sendMessage();
+  }
+
+  // ─── Auto-resize textarea ─────────────────────────
+  function autoResize(el) {
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 160) + "px";
+  }
+
+  function updateCharCount() {
+    const inp = document.getElementById("chat-input");
+    document.getElementById("char-count").textContent = `${inp.value.length} / 1000`;
+  }
+
+  // ─── Key handler ──────────────────────────────────
+  function handleKey(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  // ─── Clear chat ───────────────────────────────────
+  function clearChat() {
+    messages = [];
+    const container = document.getElementById("chat-messages");
+    container.innerHTML = "";
+    const welcome = document.createElement("div");
+    welcome.id = "welcome-screen";
+    welcome.className = "chat-welcome";
+    welcome.innerHTML = `
+      <div class="welcome-icon">🏥</div>
+      <h2>Clinical AI Ready</h2>
+      <p>Ask any medical question grounded in your uploaded PDF knowledge base.</p>
+      <div class="suggestion-chips">
+        <div class="chip" onclick="useChip(this)">What is Type 2 Diabetes?</div>
+        <div class="chip" onclick="useChip(this)">Diagnostic criteria for hypertension?</div>
+        <div class="chip" onclick="useChip(this)">Treatment for prediabetes?</div>
+        <div class="chip" onclick="useChip(this)">What is HbA1c?</div>
+      </div>`;
+    container.appendChild(welcome);
+    document.getElementById("msg-counter").textContent = "0 messages";
+    updateHistoryList();
+  }
+
+  // ─── Reset KB ─────────────────────────────────────
+  async function resetKB() {
+    if (!confirm("This will delete all uploaded documents and the vector index. Continue?")) return;
+    try {
+      await apiFetch("/api/vectorstore/reset", { method: "DELETE" });
+      showToast("Knowledge base cleared successfully.", "success");
+      checkKBStatus();
+    } catch (_) {}
+  }
+
+  // ─── Update history sidebar ───────────────────────
+  function updateHistoryList() {
+    const list = document.getElementById("history-list");
+    const userMsgs = messages.filter(m => m.role === "user");
+    if (userMsgs.length === 0) {
+      list.innerHTML = '<div class="text-sm text-muted">No messages yet.</div>';
+      return;
+    }
+    list.innerHTML = userMsgs.slice(-10).reverse().map(m =>
+      `<div class="history-item" title="${m.content}">💬 ${m.content.substring(0, 40)}${m.content.length > 40 ? "…" : ""}</div>`
+    ).join("");
+  }
+
+  // ─── Add message bubble ───────────────────────────
+  function addMessage(role, content, sources = []) {
+    const container = document.getElementById("chat-messages");
+
+    // Remove welcome screen
+    const welcome = document.getElementById("welcome-screen");
+    if (welcome) welcome.remove();
+
+    const msg = { role, content, sources, time: new Date() };
+    messages.push(msg);
+
+    const div = document.createElement("div");
+    div.className = `message ${role}`;
+
+    const avatar = role === "user" ? "👤" : "🤖";
+    const bubble = renderMarkdown(content);
+
+    let sourcesHtml = "";
+    if (sources && sources.length > 0) {
+      sourcesHtml = `
+        <button class="sources-toggle" onclick="toggleSources(this)">
+          🔍 View ${sources.length} Source(s) ▾
+        </button>
+        <div class="sources-panel hidden">
+          ${sources.map((s, i) => {
+            const text = (typeof s === "string") ? s : (s && s.content ? s.content : "");
+            const conf = (typeof s === "object" && s && s.confidence) ? s.confidence : "—";
+            return `
+            <div class="source-item">
+              <div class="source-header">
+                <strong>Source ${i + 1}</strong>
+                <span class="badge badge-success">${conf}</span>
+              </div>
+              ${text.substring(0, 300)}${text.length > 300 ? "…" : ""}
+            </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    div.innerHTML = `
+      <div class="msg-avatar">${avatar}</div>
+      <div class="msg-body">
+        <div class="msg-bubble">${bubble}</div>
+        ${sourcesHtml}
+        <span class="msg-time">${formatTime(msg.time)}</span>
+      </div>
+    `;
+
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+
+    // Update counters
+    const count = messages.length;
+    document.getElementById("msg-counter").textContent =
+      `${count} message${count !== 1 ? "s" : ""}`;
+    updateHistoryList();
+
+    return div;
+  }
+
+  function toggleSources(btn) {
+    const panel = btn.nextElementSibling;
+    const isOpen = !panel.classList.contains("hidden");
+    panel.classList.toggle("hidden", isOpen);
+    btn.textContent = isOpen
+      ? btn.textContent.replace("▴", "▾")
+      : btn.textContent.replace("▾", "▴");
+  }
+
+  // ─── Show typing indicator ────────────────────────
+  function showThinking() {
+    const container = document.getElementById("chat-messages");
+    const div = document.createElement("div");
+    div.className = "message assistant";
+    div.id = "thinking-msg";
+    div.innerHTML = `
+      <div class="msg-avatar">🤖</div>
+      <div class="msg-body">
+        <div class="thinking-bubble">
+          <div class="thinking-dot"></div>
+          <div class="thinking-dot"></div>
+          <div class="thinking-dot"></div>
+        </div>
+      </div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function removeThinking() {
+    const el = document.getElementById("thinking-msg");
+    if (el) el.remove();
+  }
+
+  // ─── Send message ─────────────────────────────────
+  async function sendMessage() {
+    if (isLoading) return;
+    const input = document.getElementById("chat-input");
+    const question = input.value.trim();
+    if (!question) return;
+
+    // Clear input
+    input.value = "";
+    input.style.height = "auto";
+    updateCharCount();
+
+    // Add user message
+    addMessage("user", question);
+
+    // Disable UI
+    isLoading = true;
+    document.getElementById("send-btn").disabled = true;
+    showThinking();
+
+    try {
+      const data = await apiFetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question,
+          model: document.getElementById("model-select").value,
+          temperature: parseFloat(document.getElementById("temperature").value),
+          top_k: parseInt(document.getElementById("top-k").value)
+        })
+      });
+
+      removeThinking();
+      addMessage("assistant", data.answer, data.sources);
+
+      if (data.status === "warning") showToast(data.answer.split(".")[0], "warning");
+
+    } catch (err) {
+      removeThinking();
+      const errMsg = err && err.message ? err.message : "Failed to communicate with API server.";
+      addMessage("assistant", `❌ ${errMsg}`);
+    } finally {
+      isLoading = false;
+      document.getElementById("send-btn").disabled = false;
+      input.focus();
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.env
+backend/data/*.pdf
+backend/vectorstore/*.faiss
+backend/vectorstore/*.pkl
