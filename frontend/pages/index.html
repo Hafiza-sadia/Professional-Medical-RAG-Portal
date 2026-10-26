@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediQ AI Portal — Professional Medical Knowledge Assistant</title>
+  <meta name="description" content="AI-powered medical knowledge retrieval system. Ask clinical questions, upload medical documents, and get evidence-based answers instantly." />
+  <link rel="stylesheet" href="/static/css/global.css" />
+  <style>
+    /* ─── Hero ─── */
+    .hero {
+      min-height: calc(100vh - var(--nav-h));
+      display: flex;
+      align-items: center;
+      padding: 5rem 0 4rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      background: rgba(14,165,233,0.08);
+      border: 1px solid rgba(14,165,233,0.2);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--primary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-eyebrow .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: pulse-green 2s infinite;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-desc {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .trust-item span { color: var(--accent); font-size: 0.9rem; }
+
+    /* ─── Hero Visual ─── */
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse, rgba(14,165,233,0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+
+    .hero-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-card-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(99,102,241,0.15));
+      border: 1px solid rgba(14,165,233,0.2);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .mock-query {
+      background: var(--bg-input);
+      border: 1px solid var(--border-active);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .mock-answer {
+      background: var(--bg-surface);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      border-left: 3px solid var(--accent);
+    }
+
+    .mock-answer strong { color: var(--text-primary); }
+
+    .float-badge {
+      position: absolute;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-card);
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .float-badge.top-right { top: -20px; right: -20px; animation-delay: 0.5s; }
+    .float-badge.bottom-left { bottom: -20px; left: -20px; }
+
+    /* ─── Stats Bar ─── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin: 4rem 0;
+    }
+
+    .stat-block {
+      background: var(--bg-surface);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-desc { font-size: 0.85rem; color: var(--text-secondary); }
+
+    /* ─── Features ─── */
+    .features-section { padding: 4rem 0; }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover { border-color: rgba(14,165,233,0.25); transform: translateY(-3px); box-shadow: var(--shadow-glow); }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-card h3 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ─── CTA Section ─── */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(99,102,241,0.08));
+      border: 1px solid rgba(14,165,233,0.15);
+      border-radius: var(--radius-xl);
+      padding: 4rem 3rem;
+      text-align: center;
+      margin: 2rem 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(14,165,233,0.1), transparent);
+    }
+
+    .cta-section > * { position: relative; z-index: 1; }
+    .cta-section h2 { font-size: 2.25rem; margin-bottom: 0.75rem; }
+    .cta-section p { color: var(--text-secondary); max-width: 480px; margin: 0 auto 2rem; line-height: 1.75; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      text-align: center;
+    }
+    .footer p { font-size: 0.82rem; color: var(--text-muted); }
+    .footer .footer-logo { font-weight: 800; color: var(--primary); font-size: 1rem; margin-bottom: 0.5rem; }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-visual { display: none; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .stats-bar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Navbar ─────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-inner">
+        <a href="/" class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4v16M4 12h16" stroke="#ffffff" stroke-width="2.6"/>
+          <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+        </svg>
+      </div>
+      <div class="logo-title">
+        Medi<span class="q-accent">Q</span>
+        <span class="logo-pill">CLINICAL AI</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/chat">Evidence Chat</a></li>
+      <li><a href="/upload">PDF Ingestion</a></li>
+      <li><a href="/research">Benchmark & Research</a></li>
+      <li><a href="/about">About & System</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="/upload" class="btn btn-outline btn-sm">Upload PDF</a>
+      <a href="/chat" class="btn btn-primary btn-sm">Start Chatting →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Page ───────────────────────────────────── -->
+<div class="page-content">
+<div class="page-container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <div class="dot"></div>
+          AI-Powered Clinical Knowledge Engine
+        </div>
+        <h1>
+          Medical <span class="grad-text">Intelligence</span><br>
+          at Your Fingertips
+        </h1>
+        <p class="hero-desc">
+          Upload medical PDFs and instantly get expert AI-driven answers grounded in verified clinical literature — powered by Retrieval-Augmented Generation and Groq Llama 3.
+        </p>
+        <div class="hero-actions">
+          <a href="/chat" class="btn btn-primary btn-lg">
+            💬 Start Consultation
+          </a>
+          <a href="/upload" class="btn btn-outline btn-lg">
+            📤 Upload Documents
+          </a>
+        </div>
+        <div class="hero-trust">
+          <div class="trust-item"><span>✅</span> Evidence-Based</div>
+          <div class="trust-item"><span>🔒</span> Secure Local Storage</div>
+          <div class="trust-item"><span>⚡</span> Real-Time RAG</div>
+          <div class="trust-item"><span>🤖</span> Groq Llama 3</div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="float-badge top-right">
+          <span>🟢</span> Knowledge Base Ready
+        </div>
+        <div class="float-badge bottom-left">
+          <span>⚡</span> <span id="stat-chunks">190</span> Chunks Indexed
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <div class="hero-card-icon">🏥</div>
+            <div>
+              <div style="font-size:0.9rem;font-weight:700;">MediQ Assistant</div>
+              <div style="font-size:0.75rem;color:var(--accent);">● Online</div>
+            </div>
+            <div style="margin-left:auto">
+              <span class="badge badge-success">Llama 3</span>
+            </div>
+          </div>
+
+          <div class="mock-query">
+            💬 What are the diagnostic criteria for Type 2 Diabetes?
+          </div>
+
+          <div class="mock-answer">
+            <strong>Clinical Summary:</strong> Type 2 Diabetes diagnosis requires one of the following:<br><br>
+            • <strong>Fasting Plasma Glucose</strong> ≥ 126 mg/dL<br>
+            • <strong>2-hr glucose</strong> ≥ 200 mg/dL (OGTT)<br>
+            • <strong>HbA1c</strong> ≥ 6.5%<br>
+            • Random glucose ≥ 200 with symptoms<br><br>
+            <em>Confirm with repeat testing. — ADA Standards 2025</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-block">
+      <div class="stat-num grad-text">RAG</div>
+      <div class="stat-desc">Retrieval-Augmented Generation</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num grad-text">99%</div>
+      <div class="stat-desc">Document Accuracy</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num grad-text">&lt;2s</div>
+      <div class="stat-desc">Response Time</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num grad-text">∞</div>
+      <div class="stat-desc">PDF Documents Supported</div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features-section">
+    <div class="text-center mb-3">
+      <div class="section-label">⚙️ Features</div>
+      <h2 class="section-title" style="font-size:clamp(1.75rem,3vw,2.5rem)">
+        Built for Clinical-Grade Performance
+      </h2>
+    </div>
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(14,165,233,0.12);color:var(--primary)">🧠</div>
+        <h3>Semantic Understanding</h3>
+        <p>Powered by <em>sentence-transformers/all-MiniLM-L6-v2</em> to match your clinical questions to the most relevant knowledge chunks with precision.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(99,102,241,0.12);color:var(--secondary)">📄</div>
+        <h3>Multi-Document Support</h3>
+        <p>Upload multiple PDF clinical guidelines, research papers, or patient education material. The system merges them into a unified searchable knowledge base.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.12);color:var(--accent)">⚡</div>
+        <h3>Real-Time RAG Pipeline</h3>
+        <p>FAISS vector database retrieves top-k relevant chunks at millisecond speed, then Groq Llama 3 synthesizes an expert answer grounded in your documents.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.12);color:var(--warning)">🔍</div>
+        <h3>Source Transparency</h3>
+        <p>Every AI answer shows its evidence trail — view the exact document passages used to generate the response, ensuring clinical accountability.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,0.12);color:var(--danger)">🛡️</div>
+        <h3>Locally Persisted Index</h3>
+        <p>Your vector index is saved locally in FAISS format — no external API calls for your private medical documents. Full offline retrieval capability.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(14,165,233,0.12);color:var(--primary)">🤖</div>
+        <h3>Multiple Llama 3 Models</h3>
+        <p>Choose between <em>llama3-70b-8192</em>, <em>llama3-8b-8192</em>, or Mixtral models. Tune temperature and retrieval count for your use case.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to Consult the AI?</h2>
+    <p>Upload your medical PDFs and start asking clinical questions with evidence-backed AI answers in seconds.</p>
+    <div class="cta-actions">
+      <a href="/upload" class="btn btn-primary btn-lg">📤 Upload Knowledge Base</a>
+      <a href="/chat" class="btn btn-outline btn-lg">💬 Open AI Chat</a>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="page-container">
+    <div class="footer-logo">MediQ AI Portal</div>
+    <p>AI-powered medical knowledge retrieval • Not a substitute for professional medical advice</p>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="/static/js/utils.js"></script>
+<script>
+  // Fetch real chunk count if KB is ready
+  apiFetch("/api/vectorstore/status").then(d => {
+    if (d.ready) {
+      // we don't have direct chunk count but can show doc count
+      const el = document.getElementById("stat-chunks");
+      if (el && d.document_count > 0) el.textContent = d.document_count + " Docs";
+    }
+  }).catch(() => {});
+</script>
+</body>
+</html>

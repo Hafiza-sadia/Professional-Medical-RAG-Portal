@@ -1,0 +1,137 @@
+[
+  {
+    "id": "MED-001",
+    "category": "Definition",
+    "question": "What is diabetes and what causes high levels of glucose in the blood?",
+    "gold_answer": "Diabetes is a serious disease that occurs when the body doesn't produce enough insulin or cannot effectively use the insulin it makes, causing glucose (blood sugar) to build up in the bloodstream.",
+    "expected_keywords": ["insulin", "glucose", "blood", "sugar"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-002",
+    "category": "Symptomatology",
+    "question": "What are the common symptoms of diabetes?",
+    "gold_answer": "Common symptoms include excessive thirst (frequent drinking), frequent urination (going to the bathroom often), extreme tiredness, unexplained weight loss, blurry vision, and slow-healing sores.",
+    "expected_keywords": ["thirsty", "urinate", "bathroom", "tired", "weight", "vision", "sores"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-003",
+    "category": "Classification",
+    "question": "What is the difference between Type 1 and Type 2 diabetes?",
+    "gold_answer": "Type 1 diabetes occurs when the pancreas makes little or no insulin (often diagnosed in children and young adults), requiring lifelong insulin. Type 2 diabetes occurs when the body becomes resistant to insulin or doesn't make enough insulin, commonly associated with lifestyle factors, overweight, and family history.",
+    "expected_keywords": ["type 1", "type 2", "insulin", "body", "pancreas"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-004",
+    "category": "Risk Factors",
+    "question": "Who is at higher risk for developing Type 2 diabetes?",
+    "gold_answer": "Individuals at higher risk include those who are overweight or obese, age 45 or older, have a family history of diabetes, are physically inactive, or have high blood pressure.",
+    "expected_keywords": ["overweight", "risk", "family", "active", "age"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-005",
+    "category": "Diagnosis",
+    "question": "How is diabetes diagnosed and what blood tests are used?",
+    "gold_answer": "Diabetes is diagnosed using blood glucose tests such as the A1C test (HbA1c), Fasting Plasma Glucose (FPG) test, and Oral Glucose Tolerance Test (OGTT).",
+    "expected_keywords": ["a1c", "blood", "test", "glucose", "fasting"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-006",
+    "category": "Complications",
+    "question": "What long-term health complications can occur from uncontrolled diabetes?",
+    "gold_answer": "Uncontrolled diabetes can lead to heart disease, stroke, kidney damage (nephropathy), nerve damage (neuropathy), foot ulcers, vision loss or blindness, and dental problems.",
+    "expected_keywords": ["heart", "kidney", "nerve", "feet", "eyes", "blindness"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-007",
+    "category": "Management",
+    "question": "What lifestyle changes help manage diabetes?",
+    "gold_answer": "Healthy eating (low refined carbs and balanced meals), regular physical activity, monitoring blood sugar levels, taking prescribed medications, and maintaining a healthy weight.",
+    "expected_keywords": ["healthy", "eating", "physical", "activity", "exercise", "blood sugar"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-008",
+    "category": "Complications",
+    "question": "What is hypoglycemia and what are its signs?",
+    "gold_answer": "Hypoglycemia is abnormally low blood sugar, marked by shaking, sweating, dizziness, rapid heartbeat, hunger, confusion, and weakness.",
+    "expected_keywords": ["low blood sugar", "hypoglycemia", "shaky", "sweating", "dizzy"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-009",
+    "category": "Prevention",
+    "question": "Can prediabetes be reversed or prevented from turning into Type 2 diabetes?",
+    "gold_answer": "Yes, prediabetes can often be reversed through modest weight loss, healthy dietary changes, and moderate exercise like brisk walking for 150 minutes per week.",
+    "expected_keywords": ["prediabetes", "weight", "exercise", "prevent"],
+    "gold_doc": "diabetes_guide.pdf",
+    "is_out_of_domain": false
+  },
+  {
+    "id": "MED-010",
+    "category": "Out-of-Domain Negative",
+    "question": "What is the capital of China and what is the population of Beijing?",
+    "gold_answer": "INSUFFICIENT_EVIDENCE",
+    "expected_keywords": [],
+    "gold_doc": "none",
+    "is_out_of_domain": true
+  },
+  {
+    "id": "MED-011",
+    "category": "Out-of-Domain Negative",
+    "question": "How do you configure an Apache web server with SSL certificate?",
+    "gold_answer": "INSUFFICIENT_EVIDENCE",
+    "expected_keywords": [],
+    "gold_doc": "none",
+    "is_out_of_domain": true
+  },
+  {
+    "id": "MED-012",
+    "category": "Out-of-Domain Negative",
+    "question": "What are the quantum physics principles of electron tunneling in semiconductors?",
+    "gold_answer": "INSUFFICIENT_EVIDENCE",
+    "expected_keywords": [],
+    "gold_doc": "none",
+    "is_out_of_domain": true
+  },
+  {
+    "id": "MED-013",
+    "category": "Out-of-Scope Medical",
+    "question": "What is the surgical resection guideline for glioblastoma multiforme?",
+    "gold_answer": "INSUFFICIENT_EVIDENCE",
+    "expected_keywords": [],
+    "gold_doc": "none",
+    "is_out_of_domain": true
+  },
+  {
+    "id": "MED-014",
+    "category": "Out-of-Scope Medical",
+    "question": "What is the recommended pediatric dosage of amoxicillin for acute otitis media?",
+    "gold_answer": "INSUFFICIENT_EVIDENCE",
+    "expected_keywords": [],
+    "gold_doc": "none",
+    "is_out_of_domain": true
+  },
+  {
+    "id": "MED-015",
+    "category": "Out-of-Scope Medical",
+    "question": "What are the diagnostic classification criteria for systemic lupus erythematosus?",
+    "gold_answer": "INSUFFICIENT_EVIDENCE",
+    "expected_keywords": [],
+    "gold_doc": "none",
+    "is_out_of_domain": true
+  }
+]

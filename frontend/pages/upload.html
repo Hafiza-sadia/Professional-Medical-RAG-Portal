@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Documents — MediQ Portal</title>
+  <meta name="description" content="Upload medical PDFs to build the AI knowledge base." />
+  <link rel="stylesheet" href="/static/css/global.css" />
+  <link rel="stylesheet" href="/static/css/upload.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+        <a href="/" class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4v16M4 12h16" stroke="#ffffff" stroke-width="2.6"/>
+          <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+        </svg>
+      </div>
+      <div class="logo-title">
+        Medi<span class="q-accent">Q</span>
+        <span class="logo-pill">CLINICAL AI</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/chat">Evidence Chat</a></li>
+      <li><a href="/upload" class="active">PDF Ingestion</a></li>
+      <li><a href="/research">Benchmark & Research</a></li>
+      <li><a href="/about">About & System</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="/chat" class="btn btn-primary btn-sm">Open Chat →</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-content">
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="mb-3">
+    <div class="section-label">📤 Document Management</div>
+    <h1 class="section-title" style="font-size:2rem">Upload Medical Knowledge Base</h1>
+    <p class="section-subtitle">
+      Upload one or more medical PDF files to build your clinical knowledge base. Files are processed into semantic chunks and indexed into a FAISS vector database.
+    </p>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">📁</div>
+      <div>
+        <div class="stat-val" id="stat-docs">—</div>
+        <div class="stat-label">Documents Loaded</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🧠</div>
+      <div>
+        <div class="stat-val" id="stat-kb">—</div>
+        <div class="stat-label">KB Status</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div>
+        <div class="stat-val" id="stat-engine">FAISS</div>
+        <div class="stat-label">Vector Engine</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="upload-layout">
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="drop-zone">
+      <input type="file" id="file-input" multiple accept=".pdf" onchange="onFileSelect(event)" />
+      <div class="drop-icon">📄</div>
+      <h3>Drag & Drop PDFs Here</h3>
+      <p>Or click to browse your files. Only <strong>.pdf</strong> files are accepted.</p>
+      <div class="btn btn-primary">Browse Files</div>
+    </div>
+
+    <!-- File Queue -->
+    <div class="file-queue" id="file-queue"></div>
+
+    <!-- Upload Button -->
+    <div id="upload-actions" class="hidden mt-2">
+      <button class="btn btn-primary btn-lg btn-full" id="upload-btn" onclick="uploadAll()">
+        ⚡ Process & Build Knowledge Base
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Existing Documents -->
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <h3 style="font-size:1rem">📚 Indexed Documents</h3>
+        <button class="btn btn-danger btn-sm" onclick="resetKB()">🗑️ Reset KB</button>
+      </div>
+      <div class="doc-list" id="doc-list">
+        <div class="text-sm text-muted">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="card mt-3" style="background:rgba(14,165,233,0.04);border-color:rgba(14,165,233,0.15)">
+      <h4 style="margin-bottom:0.75rem;font-size:0.95rem">📘 How It Works</h4>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+        <div>
+          <div style="font-size:1.4rem;margin-bottom:0.4rem">1️⃣</div>
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.25rem">Upload PDF</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary)">Select clinical guidelines, research papers, or medical textbooks in PDF format.</div>
+        </div>
+        <div>
+          <div style="font-size:1.4rem;margin-bottom:0.4rem">2️⃣</div>
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.25rem">Vector Indexing</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary)">Text is split into 1000-character chunks and embedded using sentence-transformers into FAISS.</div>
+        </div>
+        <div>
+          <div style="font-size:1.4rem;margin-bottom:0.4rem">3️⃣</div>
+          <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.25rem">AI Answers</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary)">Ask questions in the Chat page. Groq retrieves relevant chunks and synthesizes clinical answers.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div id="toast-container"></div>
+<script src="/static/js/utils.js"></script>
+<script>
+  let pendingFiles = [];
+
+  // ─── Init ─────────────────────────────────────────
+  document.addEventListener("DOMContentLoaded", () => {
+    loadVSStatus();
+    setupDragDrop();
+  });
+
+  async function loadVSStatus() {
+    try {
+      const data = await apiFetch("/api/vectorstore/status");
+      document.getElementById("stat-docs").textContent = data.document_count;
+      document.getElementById("stat-kb").textContent = data.ready ? "Ready" : "Empty";
+
+      const list = document.getElementById("doc-list");
+      if (data.document_count === 0) {
+        list.innerHTML = '<div class="text-sm text-muted">No documents indexed. Upload PDFs above.</div>';
+      } else {
+        list.innerHTML = data.documents.map(name => `
+          <div class="doc-item">
+            <span class="doc-icon">📄</span>
+            <span class="doc-name">${name}</span>
+            <span class="badge badge-success">Indexed</span>
+          </div>
+        `).join("");
+      }
+    } catch (_) {}
+  }
+
+  // ─── Drag & Drop setup ────────────────────────────
+  function setupDragDrop() {
+    const zone = document.getElementById("drop-zone");
+    zone.addEventListener("dragover", e => { e.preventDefault(); zone.classList.add("drag-over"); });
+    zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
+    zone.addEventListener("drop", e => {
+      e.preventDefault();
+      zone.classList.remove("drag-over");
+      addFiles(Array.from(e.dataTransfer.files).filter(f => f.type === "application/pdf"));
+    });
+  }
+
+  // ─── File select handler ──────────────────────────
+  function onFileSelect(e) {
+    addFiles(Array.from(e.target.files));
+  }
+
+  function addFiles(files) {
+    files.forEach(file => {
+      if (!pendingFiles.find(f => f.name === file.name && f.size === file.size)) {
+        pendingFiles.push(file);
+      }
+    });
+    renderQueue();
+  }
+
+  function renderQueue() {
+    const queue = document.getElementById("file-queue");
+    const actions = document.getElementById("upload-actions");
+
+    if (pendingFiles.length === 0) {
+      queue.innerHTML = "";
+      actions.classList.add("hidden");
+      return;
+    }
+
+    actions.classList.remove("hidden");
+    queue.innerHTML = pendingFiles.map((f, i) => `
+      <div class="file-item" id="file-item-${i}">
+        <div class="file-icon">📄</div>
+        <div class="file-info">
+          <div class="file-name">${f.name}</div>
+          <div class="file-size">${formatBytes(f.size)}</div>
+          <div class="progress-bar-wrap hidden" id="progress-${i}">
+            <div class="progress-bar" id="bar-${i}" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="file-status">
+          <button class="btn btn-danger btn-sm" onclick="removeFile(${i})">✕</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function removeFile(index) {
+    pendingFiles.splice(index, 1);
+    renderQueue();
+  }
+
+  // ─── Upload all files ─────────────────────────────
+  async function uploadAll() {
+    if (pendingFiles.length === 0) return;
+    const btn = document.getElementById("upload-btn");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Processing...';
+
+    for (let i = 0; i < pendingFiles.length; i++) {
+      const file = pendingFiles[i];
+      const progressWrap = document.getElementById(`progress-${i}`);
+      const bar = document.getElementById(`bar-${i}`);
+
+      if (progressWrap) {
+        progressWrap.classList.remove("hidden");
+        bar.style.width = "20%";
+      }
+
+      const form = new FormData();
+      form.append("file", file);
+
+      try {
+        const data = await fetch("/api/upload", { method: "POST", body: form });
+        const result = await data.json();
+
+        if (!data.ok) throw new Error(result.detail);
+
+        if (bar) bar.style.width = "100%";
+
+        const item = document.getElementById(`file-item-${i}`);
+        if (item) {
+          const statusEl = item.querySelector(".file-status");
+          statusEl.innerHTML = '<span class="badge badge-success">✅ Indexed</span>';
+        }
+        showToast(`${file.name}: ${result.chunks} chunks indexed`, "success");
+
+      } catch (err) {
+        if (bar) { bar.style.background = "var(--danger)"; bar.style.width = "100%"; }
+        showToast(`Failed: ${file.name} — ${err.message}`, "error");
+      }
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '✅ All Files Processed';
+    pendingFiles = [];
+    setTimeout(() => {
+      btn.innerHTML = '⚡ Process & Build Knowledge Base';
+      renderQueue();
+      loadVSStatus();
+    }, 2000);
+  }
+
+  // ─── Reset KB ─────────────────────────────────────
+  async function resetKB() {
+    if (!confirm("This will permanently delete all indexed documents. Continue?")) return;
+    try {
+      await apiFetch("/api/vectorstore/reset", { method: "DELETE" });
+      showToast("Knowledge base reset successfully.", "success");
+      loadVSStatus();
+    } catch (_) {}
+  }
+</script>
+</body>
+</html>

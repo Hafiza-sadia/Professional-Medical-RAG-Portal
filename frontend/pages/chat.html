@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediQ — Evidence-Grounded Clinical AI Chat</title>
+  <meta name="description" content="Evidence-grounded medical Q&A with verifiable PDF citations, dual answering modes, and clinical safety abstention." />
+  <link rel="stylesheet" href="/static/css/global.css" />
+  <link rel="stylesheet" href="/static/css/chat.css" />
+  <style>
+    /* Mode Toggle & Custom Elements */
+    .mode-toggle-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem;
+    }
+    .segmented-control {
+      display: flex;
+      background: var(--bg-input);
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      gap: 4px;
+      border: 1px solid var(--border);
+    }
+    .segmented-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.55rem 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .segmented-btn.active {
+      background: linear-gradient(135deg, #0284c7 0%, #0f766e 100%);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35);
+    }
+    .latency-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      padding: 0.25rem 0.65rem;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      margin-top: 0.4rem;
+    }
+    .source-meta-tag {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .badge-high { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+    .badge-mod { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(14,165,233,0.3); }
+    .badge-low { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+    .copy-chip {
+      cursor: pointer;
+      font-size: 0.72rem;
+      color: var(--primary);
+      background: transparent;
+      border: 1px solid rgba(14, 165, 233, 0.25);
+      padding: 3px 8px;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+    .copy-chip:hover {
+      background: rgba(14, 165, 233, 0.15);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-inner">
+        <a href="/" class="nav-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4v16M4 12h16" stroke="#ffffff" stroke-width="2.6"/>
+          <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+        </svg>
+      </div>
+      <div class="logo-title">
+        Medi<span class="q-accent">Q</span>
+        <span class="logo-pill">CLINICAL AI</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/chat" class="active">Evidence Chat</a></li>
+      <li><a href="/upload">PDF Ingestion</a></li>
+      <li><a href="/research">Benchmark & Research</a></li>
+      <li><a href="/about">About & System</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="/upload" class="btn btn-outline btn-sm">+ Upload PDF</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Chat Layout -->
+<div class="chat-layout">
+
+  <!-- Sidebar -->
+  <aside class="chat-sidebar">
+
+    <!-- Answering Mode Switcher -->
+    <div>
+      <div class="sidebar-section-title">Answering Mode</div>
+      <div class="mode-toggle-card">
+        <div class="segmented-control">
+          <button class="segmented-btn active" id="btn-mode-doc" onclick="setMode('document')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Document Mode
+          </button>
+          <button class="segmented-btn" id="btn-mode-gen" onclick="setMode('general')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            General Mode
+          </button>
+        </div>
+        <p id="mode-desc" class="text-muted" style="font-size:0.75rem; margin-top:0.6rem; line-height:1.4;">
+          Answers strictly verified against uploaded PDF documents with passage citations and clinical abstention.
+        </p>
+      </div>
+    </div>
+
+    <!-- Document Knowledge Base Status -->
+    <div>
+      <div class="sidebar-section-title">Clinical Knowledge Base</div>
+      <div class="kb-status-card">
+        <div class="kb-indicator">
+          <span class="kb-dot ready" id="kb-dot"></span>
+          <span class="text-sm font-semibold" id="kb-label">Knowledge base ready</span>
+        </div>
+        <div class="text-sm text-muted" id="kb-details">Checking repository...</div>
+        <div class="mt-2 flex gap-1">
+          <a href="/upload" class="btn btn-outline btn-sm" style="font-size:0.75rem; flex:1;">+ Ingest New PDF</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Hyperparameters -->
+    <div>
+      <div class="sidebar-section-title">Inference Settings</div>
+      <div class="flex flex-col gap-2">
+
+        <div class="input-group model-selector">
+          <label class="input-label">Groq LLM Engine</label>
+          <select id="model-select">
+            <option value="qwen/qwen3.8-27b" selected>Qwen 3.8 27B (Recommended)</option>
+            <option value="openai/gpt-oss-20b">GPT-OSS 20B (Fast)</option>
+            <option value="openai/gpt-oss-120b">GPT-OSS 120B (Powerful)</option>
+        </select>
+        </div>
+
+        <div class="input-group">
+          <div class="slider-row">
+            <label class="input-label">Relevance Threshold</label>
+            <span id="threshold-val">0.35</span>
+          </div>
+          <input type="range" id="threshold" min="0.20" max="0.60" step="0.05" value="0.35"
+            oninput="document.getElementById('threshold-val').textContent = this.value" />
+          <small class="text-muted" style="font-size:0.7rem">Abstains if evidence score is below this cut-off</small>
+        </div>
+
+        <div class="input-group">
+          <div class="slider-row">
+            <label class="input-label">Retrieved Evidence Top-K</label>
+            <span id="top-k-val">3</span>
+          </div>
+          <input type="range" id="top-k" min="1" max="5" step="1" value="3"
+            oninput="document.getElementById('top-k-val').textContent = this.value" />
+        </div>
+
+        <div class="input-group">
+          <div class="slider-row">
+            <label class="input-label">Temperature</label>
+            <span id="temp-val">0.2</span>
+          </div>
+          <input type="range" id="temperature" min="0.0" max="0.7" step="0.05" value="0.2"
+            oninput="document.getElementById('temp-val').textContent = this.value" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Session History -->
+    <div>
+      <div class="sidebar-section-title">Session Queries</div>
+      <div class="history-list" id="history-list">
+        <div class="text-sm text-muted">No questions yet in this session.</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="margin-top:auto;" class="flex flex-col gap-1">
+      <button class="btn btn-outline btn-sm" onclick="clearChat()" style="color:var(--text-muted);">Clear Conversation</button>
+      <button class="btn btn-outline btn-sm" onclick="resetKB()" style="color:var(--danger); border-color:rgba(244,63,94,0.3);">Reset Knowledge Base</button>
+    </div>
+
+  </aside>
+
+  <!-- Main Chat Column -->
+  <main class="chat-main">
+
+    <!-- Chat Topbar -->
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="header-badge">
+          <span style="display:inline-flex; width:26px; height:26px; background:linear-gradient(135deg, #0284c7, #0f766e); border-radius:7px; align-items:center; justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg>
+          </span>
+          MediQ Clinical Assistant
+        </div>
+        <span id="current-mode-badge" class="mode-tag doc-mode">Document Evidence Mode</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-sm text-muted" id="msg-counter">0 messages</span>
+      </div>
+    </div>
+
+    <!-- Chat Messages Flow -->
+    <div class="chat-messages" id="chat-messages">
+      <!-- Welcome card on first load -->
+      <div class="chat-welcome" id="welcome-screen">
+        <div class="welcome-icon-box">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round">
+            <path d="M12 4v16M4 12h16"/><circle cx="12" cy="12" r="3.5" fill="#34d399"/>
+          </svg>
+        </div>
+        <h2>Evidence-Grounded Clinical AI</h2>
+        <p>Ask medical questions strictly verified against your uploaded guideline PDFs, or switch to General Clinical Mode.</p>
+        <div class="suggestion-chips">
+          <div class="chip" onclick="useChip(this)">What is diabetes and what causes high blood sugar?</div>
+          <div class="chip" onclick="useChip(this)">What are the warning signs and symptoms of diabetes?</div>
+          <div class="chip" onclick="useChip(this)">What is hypoglycemia and what are its symptoms?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Bar Area -->
+    <div class="chat-input-area">
+      <div class="input-box-wrapper">
+        <textarea
+          id="chat-input"
+          class="chat-input"
+          rows="1"
+          placeholder="Ask an evidence-grounded medical question..."
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this); updateCharCount();"
+        ></textarea>
+        <div class="input-actions-row">
+          <span class="char-counter" id="char-count">0 / 1000</span>
+          <button id="send-btn" class="send-button" onclick="sendMessage()" title="Send Question (Enter)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p class="disclaimer-bar">
+        ⚠️ MediQ is a research-oriented AI system. All citations are extracted from uploaded documents. Not a substitute for professional clinical judgment.
+      </p>
+    </div>
+
+  </main>
+</div>
+
+<script src="/static/js/utils.js"></script>
+<script>
+  let currentMode = "document";
+  let isLoading = false;
+  let messages = [];
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    await checkKBStatus();
+  });
+
+  async function checkKBStatus() {
+    try {
+      const data = await apiFetch("/api/vectorstore/status");
+      const dot = document.getElementById("kb-dot");
+      const label = document.getElementById("kb-label");
+      const details = document.getElementById("kb-details");
+
+      if (data.ready && data.document_count > 0) {
+        dot.className = "kb-dot ready";
+        label.textContent = "Knowledge base ready";
+        details.textContent = `${data.document_count} document(s) indexed`;
+      } else {
+        dot.className = "kb-dot empty";
+        label.textContent = "No documents indexed";
+        details.textContent = "Upload medical PDFs to enable Document Mode";
+      }
+    } catch (_) {}
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    const btnDoc = document.getElementById("btn-mode-doc");
+    const btnGen = document.getElementById("btn-mode-gen");
+    const desc = document.getElementById("mode-desc");
+    const badge = document.getElementById("current-mode-badge");
+    const input = document.getElementById("chat-input");
+
+    if (mode === "document") {
+      btnDoc.classList.add("active");
+      btnGen.classList.remove("active");
+      desc.textContent = "Answers strictly verified against uploaded PDF documents with passage citations and clinical abstention.";
+      badge.textContent = "Document Evidence Mode";
+      badge.className = "mode-tag doc-mode";
+      input.placeholder = "Ask an evidence-grounded question from your uploaded documents...";
+    } else {
+      btnGen.classList.add("active");
+      btnDoc.classList.remove("active");
+      desc.textContent = "Broad clinical overview using pre-trained AI knowledge (unverified against uploaded documents).";
+      badge.textContent = "General Clinical Mode";
+      badge.className = "mode-tag gen-mode";
+      input.placeholder = "Ask any general medical concept question...";
+    }
+  }
+
+  function useChip(el) {
+    document.getElementById("chat-input").value = el.textContent;
+    updateCharCount();
+    sendMessage();
+  }
+
+  function autoResize(el) {
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 140) + "px";
+  }
+
+  function updateCharCount() {
+    const inp = document.getElementById("chat-input");
+    document.getElementById("char-count").textContent = `${inp.value.length} / 1000`;
+  }
+
+  function handleKey(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  function clearChat() {
+    messages = [];
+    const container = document.getElementById("chat-messages");
+    container.innerHTML = "";
+    const welcome = document.createElement("div");
+    welcome.id = "welcome-screen";
+    welcome.className = "chat-welcome";
+    welcome.innerHTML = `
+      <div class="welcome-icon-box">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round">
+          <path d="M12 4v16M4 12h16"/><circle cx="12" cy="12" r="3.5" fill="#34d399"/>
+        </svg>
+      </div>
+      <h2>Evidence-Grounded Clinical AI</h2>
+      <p>Ask medical questions strictly verified against your uploaded guideline PDFs, or switch to General Clinical Mode.</p>
+      <div class="suggestion-chips">
+        <div class="chip" onclick="useChip(this)">What is diabetes and what causes high blood sugar?</div>
+        <div class="chip" onclick="useChip(this)">What are the warning signs and symptoms of diabetes?</div>
+        <div class="chip" onclick="useChip(this)">What is hypoglycemia and what are its symptoms?</div>
+      </div>`;
+    container.appendChild(welcome);
+    document.getElementById("msg-counter").textContent = "0 messages";
+    updateHistoryList();
+  }
+
+  async function resetKB() {
+    if (!confirm("This will permanently clear all indexed medical documents and reset the FAISS index. Continue?")) return;
+    try {
+      await apiFetch("/api/vectorstore/reset", { method: "DELETE" });
+      showToast("Knowledge base cleared.", "success");
+      await checkKBStatus();
+    } catch (_) {}
+  }
+
+  function updateHistoryList() {
+    const list = document.getElementById("history-list");
+    const userMsgs = messages.filter(m => m.role === "user");
+    if (userMsgs.length === 0) {
+      list.innerHTML = '<div class="text-sm text-muted">No questions yet in this session.</div>';
+      return;
+    }
+    list.innerHTML = userMsgs.slice(-10).reverse().map(m =>
+      `<div class="history-item" onclick="document.getElementById('chat-input').value='${m.content.replace(/'/g, "\\'")}'; updateCharCount();" title="${m.content}">• ${m.content.substring(0, 36)}${m.content.length > 36 ? "..." : ""}</div>`
+    ).join("");
+  }
+
+  function copyText(btn, text) {
+    navigator.clipboard.writeText(text);
+    const orig = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => btn.textContent = orig, 1500);
+  }
+
+  function addMessage(role, content, sources = [], latency = null, mode = "document", verification = null, is_abstention = false) {
+    const container = document.getElementById("chat-messages");
+    const welcome = document.getElementById("welcome-screen");
+    if (welcome) welcome.remove();
+
+    const msg = { role, content, sources, latency, mode, verification, is_abstention, time: new Date() };
+    messages.push(msg);
+
+    const div = document.createElement("div");
+    div.className = `message ${role}`;
+
+    // SVG Avatars (Executive Clinical Standard)
+    const userAvatarSvg = `
+      <div class="msg-avatar-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>`;
+
+    const assistantAvatarSvg = `
+      <div class="msg-avatar-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v16M4 12h16"/><circle cx="12" cy="12" r="2.5" fill="#34d399"/></svg>
+      </div>`;
+
+    const avatarHtml = role === "user" ? userAvatarSvg : assistantAvatarSvg;
+    const bubble = renderMarkdown(content);
+
+    // Verification Badge
+    let verificationBadge = "";
+    if (role === "assistant") {
+      if (is_abstention) {
+        verificationBadge = `
+          <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(245,158,11,0.14); border:1px solid rgba(245,158,11,0.3); color:#fbbf24; font-size:0.75rem; font-weight:600; padding:4px 10px; border-radius:6px; margin-bottom:8px;">
+            🛡️ Clinical Grounding Gate: Evidence Insufficient (Hallucination Prevented)
+          </div>`;
+      } else if (mode === "general") {
+        verificationBadge = `
+          <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(14,165,233,0.14); border:1px solid rgba(14,165,233,0.3); color:#38bdf8; font-size:0.75rem; font-weight:600; padding:4px 10px; border-radius:6px; margin-bottom:8px;">
+            🌐 General AI Parametric Knowledge (Broad Educational Consensus)
+          </div>`;
+      } else if (verification && verification.total_citations > 0) {
+        const verifiedColor = verification.verification_rate === 1.0 ? '#34d399' : '#fbbf24';
+        const bg = verification.verification_rate === 1.0 ? 'rgba(16,185,129,0.14)' : 'rgba(245,158,11,0.14)';
+        const border = verification.verification_rate === 1.0 ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)';
+        const label = verification.verification_rate === 1.0 ? 'All Citations Verified in Grounded Context' : `${verification.verified_citations}/${verification.total_citations} Citations Verified`;
+        verificationBadge = `
+          <div style="display:inline-flex; align-items:center; gap:6px; background:${bg}; border:1px solid ${border}; color:${verifiedColor}; font-size:0.75rem; font-weight:600; padding:4px 10px; border-radius:6px; margin-bottom:8px;">
+            ✓ ${label}
+          </div>`;
+      } else if (mode === "document") {
+        verificationBadge = `
+          <div style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.14); border:1px solid rgba(16,185,129,0.3); color:#34d399; font-size:0.75rem; font-weight:600; padding:4px 10px; border-radius:6px; margin-bottom:8px;">
+            📄 Document-Grounded Clinical Answer
+          </div>`;
+      }
+    }
+
+    let sourcesHtml = "";
+    if (sources && sources.length > 0) {
+      // In Document Mode with valid answer, panel starts expanded so user immediately sees exact PDF & page
+      const startOpen = mode === "document" && !is_abstention;
+      const toggleArrow = startOpen ? "▴" : "▾";
+      const panelClass = startOpen ? "sources-panel" : "sources-panel hidden";
+
+      sourcesHtml = `
+        <button class="sources-toggle" onclick="toggleSources(this)" title="Toggle source evidence cards">
+          🔍 Verified Evidence: ${sources.length} Supporting Source Passage(s) ${toggleArrow}
+        </button>
+        <div class="${panelClass}">
+          ${sources.map((s, i) => {
+            const doc = s.document || "Medical Document";
+            const page = Array.isArray(s.page) ? s.page.join(", ") : s.page || "1";
+            const scorePct = s.relevance_score ? (s.relevance_score * 100).toFixed(1) + "%" : "-";
+            const tier = s.relevance_tier || "Relevance";
+            const tierClass = tier.includes("High") ? "badge-high" : (tier.includes("Moderate") ? "badge-mod" : "badge-low");
+            const rawL2 = s.l2_distance !== undefined ? `L2: ${s.l2_distance}` : "";
+            const excerpt = s.content || "";
+
+            return `
+            <div class="source-item">
+              <div class="source-header">
+                <div>
+                  <strong style="color:#fff;">📄 ${doc}</strong> &nbsp;
+                  <span class="text-muted text-sm">Page ${page}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="source-meta-tag ${tierClass}">${tier} (${scorePct})</span>
+                  <span class="text-muted" style="font-size:0.7rem">${rawL2}</span>
+                </div>
+              </div>
+              <div class="source-excerpt mt-1" style="font-size:0.83rem; line-height:1.5; color:var(--text-secondary);">
+                "${excerpt.substring(0, 320)}${excerpt.length > 320 ? "..." : ""}"
+              </div>
+              <div class="mt-1 flex justify-between items-center">
+                <span class="text-muted" style="font-size:0.7rem">ID: ${s.chunk_id || 'c_' + (i+1)}</span>
+                <button class="copy-chip" onclick="copyText(this, \`${excerpt.replace(/[`\\]/g, '')}\`)">Copy Excerpt</button>
+              </div>
+            </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    let latencyHtml = "";
+    if (latency && latency.total_ms) {
+      latencyHtml = `
+        <div class="latency-pill">
+          <span>Retrieval: <strong>${latency.retrieval_ms || 0}ms</strong></span>
+          <span>•</span>
+          <span>Gen: <strong>${latency.generation_ms || 0}ms</strong></span>
+          <span>•</span>
+          <span>Total: <strong>${latency.total_ms}ms</strong></span>
+        </div>
+      `;
+    }
+
+    div.innerHTML = `
+      ${avatarHtml}
+      <div class="msg-body">
+        ${verificationBadge}
+        <div class="msg-bubble">${bubble}</div>
+        ${sourcesHtml}
+        <div class="flex items-center justify-between mt-1">
+          <span class="msg-time">${formatTime(msg.time)}</span>
+          ${latencyHtml}
+        </div>
+      </div>
+    `;
+
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+
+    const count = messages.length;
+    document.getElementById("msg-counter").textContent = `${count} message${count !== 1 ? "s" : ""}`;
+    updateHistoryList();
+    return div;
+  }
+
+  function toggleSources(btn) {
+    const panel = btn.nextElementSibling;
+    const isOpen = !panel.classList.contains("hidden");
+    panel.classList.toggle("hidden", isOpen);
+    btn.textContent = isOpen
+      ? btn.textContent.replace("▴", "▾")
+      : btn.textContent.replace("▾", "▴");
+  }
+
+  function showThinking() {
+    removeThinking();
+    const container = document.getElementById("chat-messages");
+    const div = document.createElement("div");
+    div.className = "message assistant";
+    div.id = "thinking-msg";
+    div.innerHTML = `
+      <div class="msg-avatar-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v16M4 12h16"/><circle cx="12" cy="12" r="2.5" fill="#34d399"/></svg>
+      </div>
+      <div class="msg-body">
+        <div class="thinking-bubble">
+          <div class="thinking-pulse-line">
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+          </div>
+          <span class="thinking-text">Synthesizing clinical response...</span>
+        </div>
+      </div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function removeThinking() {
+    const el = document.getElementById("thinking-msg");
+    if (el) el.remove();
+  }
+
+  async function sendMessage() {
+    if (isLoading) return;
+    const input = document.getElementById("chat-input");
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = "";
+    input.style.height = "auto";
+    updateCharCount();
+
+    // Add user question
+    addMessage("user", question);
+
+    isLoading = true;
+    document.getElementById("send-btn").disabled = true;
+    showThinking();
+
+    try {
+      const data = await apiFetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question,
+          mode: currentMode,
+          model: document.getElementById("model-select").value,
+          temperature: parseFloat(document.getElementById("temperature").value),
+          top_k: parseInt(document.getElementById("top-k").value),
+          threshold: parseFloat(document.getElementById("threshold").value)
+        }),
+        timeoutMs: 30000
+      });
+
+      removeThinking();
+      addMessage("assistant", data.answer, data.sources, data.latency, data.mode, data.verification, data.is_abstention);
+
+      if (data.status === "warning") {
+        showToast("Notice: Model or network warning encountered.", "warning");
+      } else if (data.status === "abstain") {
+        showToast("System abstained: Evidence below relevance threshold.", "info");
+      }
+
+    } catch (err) {
+      removeThinking();
+      const errMsg = err && err.message ? err.message : "Failed to communicate with MediQ server.";
+      addMessage("assistant", `⚠️ **Request Notice**: ${errMsg}\n\n*Click below or re-send to try again.*`);
+    } finally {
+      removeThinking();
+      isLoading = false;
+      document.getElementById("send-btn").disabled = false;
+      input.focus();
+    }
+  }
+</script>
+</body>
+</html>

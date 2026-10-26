@@ -1,0 +1,5 @@
+Config ID,Name,Chunk Size,Overlap,Top-K,Indexed Chunks,Recall@K,Precision@K,MRR,Hit Rate,Abstention Acc,Latency (ms)
+EXP-A-baseline,Coarse Chunking (Baseline),1000,200,3,4,0.8325,0.8667,0.9333,0.9333,0.9333,15.14
+EXP-B-balanced,MediQ Balanced (Recommended),600,120,3,8,0.797,0.7778,0.8667,0.9333,1.0,21.16
+EXP-C-fine,Fine-Grained Chunking,300,60,3,15,0.7419,0.7778,0.8889,0.9333,0.9333,21.83
+EXP-D-expanded-k,Balanced + Expanded Top-K,600,120,5,8,0.8192,0.76,0.8667,0.9333,1.0,12.9

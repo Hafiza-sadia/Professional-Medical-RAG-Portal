@@ -1,0 +1,1086 @@
+[
+  {
+    "config_id": "EXP-A-baseline",
+    "name": "Coarse Chunking (Baseline)",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "top_k": 3,
+    "chunks_indexed": 4,
+    "mean_recall_at_k": 0.8325,
+    "mean_precision_at_k": 0.8667,
+    "mean_mrr": 0.9333,
+    "hit_rate_at_k": 0.9333,
+    "abstention_accuracy": 0.9333,
+    "mean_latency_ms": 15.14,
+    "detailed_results": [
+      {
+        "id": "MED-001",
+        "question": "What is diabetes and what causes high levels of glucose in the blood?",
+        "category": "Definition",
+        "sufficient_evidence": true,
+        "max_relevance": 0.7824,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 18.13
+      },
+      {
+        "id": "MED-002",
+        "question": "What are the common symptoms of diabetes?",
+        "category": "Symptomatology",
+        "sufficient_evidence": true,
+        "max_relevance": 0.6477,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.5714,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 10.94
+      },
+      {
+        "id": "MED-003",
+        "question": "What is the difference between Type 1 and Type 2 diabetes?",
+        "category": "Classification",
+        "sufficient_evidence": true,
+        "max_relevance": 0.7022,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.77
+      },
+      {
+        "id": "MED-004",
+        "question": "Who is at higher risk for developing Type 2 diabetes?",
+        "category": "Risk Factors",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5561,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.95
+      },
+      {
+        "id": "MED-005",
+        "question": "How is diabetes diagnosed and what blood tests are used?",
+        "category": "Diagnosis",
+        "sufficient_evidence": true,
+        "max_relevance": 0.4623,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 17.04
+      },
+      {
+        "id": "MED-006",
+        "question": "What long-term health complications can occur from uncontrolled diabetes?",
+        "category": "Complications",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5602,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.6667,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.68
+      },
+      {
+        "id": "MED-007",
+        "question": "What lifestyle changes help manage diabetes?",
+        "category": "Management",
+        "sufficient_evidence": true,
+        "max_relevance": 0.4537,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 0.5,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 13.07
+      },
+      {
+        "id": "MED-008",
+        "question": "What is hypoglycemia and what are its signs?",
+        "category": "Complications",
+        "sufficient_evidence": false,
+        "max_relevance": 0.2638,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "hit_at_k": 0.0,
+          "mrr": 0.0,
+          "abstention_accuracy": 0.0
+        },
+        "latency_ms": 14.39
+      },
+      {
+        "id": "MED-009",
+        "question": "Can prediabetes be reversed or prevented from turning into Type 2 diabetes?",
+        "category": "Prevention",
+        "sufficient_evidence": true,
+        "max_relevance": 0.547,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.75,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.24
+      },
+      {
+        "id": "MED-010",
+        "question": "What is the capital of China and what is the population of Beijing?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 16.95
+      },
+      {
+        "id": "MED-011",
+        "question": "How do you configure an Apache web server with SSL certificate?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 16.76
+      },
+      {
+        "id": "MED-012",
+        "question": "What are the quantum physics principles of electron tunneling in semiconductors?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 16.93
+      },
+      {
+        "id": "MED-013",
+        "question": "What is the surgical resection guideline for glioblastoma multiforme?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 16.88
+      },
+      {
+        "id": "MED-014",
+        "question": "What is the recommended pediatric dosage of amoxicillin for acute otitis media?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 13.07
+      },
+      {
+        "id": "MED-015",
+        "question": "What are the diagnostic classification criteria for systemic lupus erythematosus?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.34
+      }
+    ]
+  },
+  {
+    "config_id": "EXP-B-balanced",
+    "name": "MediQ Balanced (Recommended)",
+    "chunk_size": 600,
+    "chunk_overlap": 120,
+    "top_k": 3,
+    "chunks_indexed": 8,
+    "mean_recall_at_k": 0.797,
+    "mean_precision_at_k": 0.7778,
+    "mean_mrr": 0.8667,
+    "hit_rate_at_k": 0.9333,
+    "abstention_accuracy": 1.0,
+    "mean_latency_ms": 21.16,
+    "detailed_results": [
+      {
+        "id": "MED-001",
+        "question": "What is diabetes and what causes high levels of glucose in the blood?",
+        "category": "Definition",
+        "sufficient_evidence": true,
+        "max_relevance": 0.7917,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 22.46
+      },
+      {
+        "id": "MED-002",
+        "question": "What are the common symptoms of diabetes?",
+        "category": "Symptomatology",
+        "sufficient_evidence": true,
+        "max_relevance": 0.8358,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.5714,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 20.05
+      },
+      {
+        "id": "MED-003",
+        "question": "What is the difference between Type 1 and Type 2 diabetes?",
+        "category": "Classification",
+        "sufficient_evidence": true,
+        "max_relevance": 0.6436,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.8,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 20.99
+      },
+      {
+        "id": "MED-004",
+        "question": "Who is at higher risk for developing Type 2 diabetes?",
+        "category": "Risk Factors",
+        "sufficient_evidence": true,
+        "max_relevance": 0.86,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 26.09
+      },
+      {
+        "id": "MED-005",
+        "question": "How is diabetes diagnosed and what blood tests are used?",
+        "category": "Diagnosis",
+        "sufficient_evidence": true,
+        "max_relevance": 0.4715,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 21.14
+      },
+      {
+        "id": "MED-006",
+        "question": "What long-term health complications can occur from uncontrolled diabetes?",
+        "category": "Complications",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5794,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.6667,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 0.5,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 24.69
+      },
+      {
+        "id": "MED-007",
+        "question": "What lifestyle changes help manage diabetes?",
+        "category": "Management",
+        "sufficient_evidence": true,
+        "max_relevance": 0.4788,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.1667,
+          "precision_at_k": 0.3333,
+          "hit_at_k": 1.0,
+          "mrr": 0.5,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 20.3
+      },
+      {
+        "id": "MED-008",
+        "question": "What is hypoglycemia and what are its signs?",
+        "category": "Complications",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5166,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "hit_at_k": 0.0,
+          "mrr": 0.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 25.69
+      },
+      {
+        "id": "MED-009",
+        "question": "Can prediabetes be reversed or prevented from turning into Type 2 diabetes?",
+        "category": "Prevention",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5702,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.75,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 21.07
+      },
+      {
+        "id": "MED-010",
+        "question": "What is the capital of China and what is the population of Beijing?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 19.7
+      },
+      {
+        "id": "MED-011",
+        "question": "How do you configure an Apache web server with SSL certificate?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 17.77
+      },
+      {
+        "id": "MED-012",
+        "question": "What are the quantum physics principles of electron tunneling in semiconductors?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 19.35
+      },
+      {
+        "id": "MED-013",
+        "question": "What is the surgical resection guideline for glioblastoma multiforme?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 19.97
+      },
+      {
+        "id": "MED-014",
+        "question": "What is the recommended pediatric dosage of amoxicillin for acute otitis media?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 21.0
+      },
+      {
+        "id": "MED-015",
+        "question": "What are the diagnostic classification criteria for systemic lupus erythematosus?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 17.11
+      }
+    ]
+  },
+  {
+    "config_id": "EXP-C-fine",
+    "name": "Fine-Grained Chunking",
+    "chunk_size": 300,
+    "chunk_overlap": 60,
+    "top_k": 3,
+    "chunks_indexed": 15,
+    "mean_recall_at_k": 0.7419,
+    "mean_precision_at_k": 0.7778,
+    "mean_mrr": 0.8889,
+    "hit_rate_at_k": 0.9333,
+    "abstention_accuracy": 0.9333,
+    "mean_latency_ms": 21.83,
+    "detailed_results": [
+      {
+        "id": "MED-001",
+        "question": "What is diabetes and what causes high levels of glucose in the blood?",
+        "category": "Definition",
+        "sufficient_evidence": true,
+        "max_relevance": 0.8186,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 22.84
+      },
+      {
+        "id": "MED-002",
+        "question": "What are the common symptoms of diabetes?",
+        "category": "Symptomatology",
+        "sufficient_evidence": true,
+        "max_relevance": 0.7056,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.4286,
+          "precision_at_k": 0.3333,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 24.47
+      },
+      {
+        "id": "MED-003",
+        "question": "What is the difference between Type 1 and Type 2 diabetes?",
+        "category": "Classification",
+        "sufficient_evidence": true,
+        "max_relevance": 0.7799,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.8,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 19.69
+      },
+      {
+        "id": "MED-004",
+        "question": "Who is at higher risk for developing Type 2 diabetes?",
+        "category": "Risk Factors",
+        "sufficient_evidence": true,
+        "max_relevance": 0.8446,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.6,
+          "precision_at_k": 0.3333,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 19.19
+      },
+      {
+        "id": "MED-005",
+        "question": "How is diabetes diagnosed and what blood tests are used?",
+        "category": "Diagnosis",
+        "sufficient_evidence": true,
+        "max_relevance": 0.4792,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 0.8,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 23.86
+      },
+      {
+        "id": "MED-006",
+        "question": "What long-term health complications can occur from uncontrolled diabetes?",
+        "category": "Complications",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5882,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 0.5,
+          "precision_at_k": 0.3333,
+          "hit_at_k": 1.0,
+          "mrr": 0.3333,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 20.5
+      },
+      {
+        "id": "MED-007",
+        "question": "What lifestyle changes help manage diabetes?",
+        "category": "Management",
+        "sufficient_evidence": true,
+        "max_relevance": 0.7014,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.5,
+          "precision_at_k": 0.6667,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 19.77
+      },
+      {
+        "id": "MED-008",
+        "question": "What is hypoglycemia and what are its signs?",
+        "category": "Complications",
+        "sufficient_evidence": false,
+        "max_relevance": 0.3094,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "hit_at_k": 0.0,
+          "mrr": 0.0,
+          "abstention_accuracy": 0.0
+        },
+        "latency_ms": 27.61
+      },
+      {
+        "id": "MED-009",
+        "question": "Can prediabetes be reversed or prevented from turning into Type 2 diabetes?",
+        "category": "Prevention",
+        "sufficient_evidence": true,
+        "max_relevance": 0.6401,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.5,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 21.57
+      },
+      {
+        "id": "MED-010",
+        "question": "What is the capital of China and what is the population of Beijing?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 18.77
+      },
+      {
+        "id": "MED-011",
+        "question": "How do you configure an Apache web server with SSL certificate?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 22.41
+      },
+      {
+        "id": "MED-012",
+        "question": "What are the quantum physics principles of electron tunneling in semiconductors?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 22.53
+      },
+      {
+        "id": "MED-013",
+        "question": "What is the surgical resection guideline for glioblastoma multiforme?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 21.29
+      },
+      {
+        "id": "MED-014",
+        "question": "What is the recommended pediatric dosage of amoxicillin for acute otitis media?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 22.48
+      },
+      {
+        "id": "MED-015",
+        "question": "What are the diagnostic classification criteria for systemic lupus erythematosus?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 20.55
+      }
+    ]
+  },
+  {
+    "config_id": "EXP-D-expanded-k",
+    "name": "Balanced + Expanded Top-K",
+    "chunk_size": 600,
+    "chunk_overlap": 120,
+    "top_k": 5,
+    "chunks_indexed": 8,
+    "mean_recall_at_k": 0.8192,
+    "mean_precision_at_k": 0.76,
+    "mean_mrr": 0.8667,
+    "hit_rate_at_k": 0.9333,
+    "abstention_accuracy": 1.0,
+    "mean_latency_ms": 12.9,
+    "detailed_results": [
+      {
+        "id": "MED-001",
+        "question": "What is diabetes and what causes high levels of glucose in the blood?",
+        "category": "Definition",
+        "sufficient_evidence": true,
+        "max_relevance": 0.7917,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.1
+      },
+      {
+        "id": "MED-002",
+        "question": "What are the common symptoms of diabetes?",
+        "category": "Symptomatology",
+        "sufficient_evidence": true,
+        "max_relevance": 0.8358,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.5714,
+          "precision_at_k": 0.4,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.32
+      },
+      {
+        "id": "MED-003",
+        "question": "What is the difference between Type 1 and Type 2 diabetes?",
+        "category": "Classification",
+        "sufficient_evidence": true,
+        "max_relevance": 0.6436,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.8,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 12.11
+      },
+      {
+        "id": "MED-004",
+        "question": "Who is at higher risk for developing Type 2 diabetes?",
+        "category": "Risk Factors",
+        "sufficient_evidence": true,
+        "max_relevance": 0.86,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 12.27
+      },
+      {
+        "id": "MED-005",
+        "question": "How is diabetes diagnosed and what blood tests are used?",
+        "category": "Diagnosis",
+        "sufficient_evidence": true,
+        "max_relevance": 0.4715,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 0.8,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 12.95
+      },
+      {
+        "id": "MED-006",
+        "question": "What long-term health complications can occur from uncontrolled diabetes?",
+        "category": "Complications",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5794,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.6667,
+          "precision_at_k": 0.6,
+          "hit_at_k": 1.0,
+          "mrr": 0.5,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 16.06
+      },
+      {
+        "id": "MED-007",
+        "question": "What lifestyle changes help manage diabetes?",
+        "category": "Management",
+        "sufficient_evidence": true,
+        "max_relevance": 0.4788,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.5,
+          "precision_at_k": 0.4,
+          "hit_at_k": 1.0,
+          "mrr": 0.5,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 12.71
+      },
+      {
+        "id": "MED-008",
+        "question": "What is hypoglycemia and what are its signs?",
+        "category": "Complications",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5166,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 2,
+        "metrics": {
+          "recall_at_k": 0.0,
+          "precision_at_k": 0.0,
+          "hit_at_k": 0.0,
+          "mrr": 0.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 13.8
+      },
+      {
+        "id": "MED-009",
+        "question": "Can prediabetes be reversed or prevented from turning into Type 2 diabetes?",
+        "category": "Prevention",
+        "sufficient_evidence": true,
+        "max_relevance": 0.5702,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 0.75,
+          "precision_at_k": 0.6,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 10.27
+      },
+      {
+        "id": "MED-010",
+        "question": "What is the capital of China and what is the population of Beijing?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 11.54
+      },
+      {
+        "id": "MED-011",
+        "question": "How do you configure an Apache web server with SSL certificate?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 12.3
+      },
+      {
+        "id": "MED-012",
+        "question": "What are the quantum physics principles of electron tunneling in semiconductors?",
+        "category": "Out-of-Domain Negative",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 1,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 9.83
+      },
+      {
+        "id": "MED-013",
+        "question": "What is the surgical resection guideline for glioblastoma multiforme?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 13.06
+      },
+      {
+        "id": "MED-014",
+        "question": "What is the recommended pediatric dosage of amoxicillin for acute otitis media?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 14.18
+      },
+      {
+        "id": "MED-015",
+        "question": "What are the diagnostic classification criteria for systemic lupus erythematosus?",
+        "category": "Out-of-Scope Medical",
+        "sufficient_evidence": false,
+        "max_relevance": 0.0,
+        "top_source": "diabetes_guide.pdf",
+        "top_page": 3,
+        "metrics": {
+          "recall_at_k": 1.0,
+          "precision_at_k": 1.0,
+          "hit_at_k": 1.0,
+          "mrr": 1.0,
+          "abstention_accuracy": 1.0
+        },
+        "latency_ms": 13.98
+      }
+    ]
+  }
+]
